@@ -8,5 +8,5 @@ import com.example.models.Receipt;
 import com.example.models.User;
 
 public interface ReceiptRepository extends JpaRepository<Receipt, Integer> {
-	List<Receipt> getReceiptByUser(User u);
+	List<Receipt> getReceiptsByUser(User u);
 }

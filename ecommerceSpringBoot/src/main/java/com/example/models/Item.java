@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="itemss")
+@Table(name="items")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +27,12 @@ public class Item {
 	@Column(name="item_name")
 	private String name;
 	
+	@Column(name="Quantity")
+	private Integer amount;
+	
 	private Double  price;
 	
 	private String description;
+	
+	private String imageUrl;
 }
