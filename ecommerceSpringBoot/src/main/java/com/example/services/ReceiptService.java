@@ -43,8 +43,10 @@ public class ReceiptService {
 		return rRepo.save(rec);
 	}
 	
-	/*public List<Receipt> getAllReceipt(String email){
-		
-	}*/
+	public List<Receipt> getAllReceipt(String email){
+		User u = uRepo.getByEmail(email).get();
+		List<Receipt> rList = rRepo.getReceiptsByUser(u);
+		return rList;
+	}
 
 }
