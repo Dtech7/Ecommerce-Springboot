@@ -7,7 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +29,8 @@ public class Receipt {
 	@Column(name="receipt_number")
 	private Integer receiptNumer;
 	
-	@Column(name="created_By")
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="created_By")
 	private User user;
 	
 	private List<Item> items;
