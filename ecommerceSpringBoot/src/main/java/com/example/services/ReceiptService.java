@@ -43,8 +43,25 @@ public class ReceiptService {
 		return rRepo.save(rec);
 	}
 	
-	/*public List<Receipt> getAllReceipt(String email){
+	public Receipt readReceipt(Receipt r) {
+		return rRepo.findById(r.getReceiptNumer()).get();
+	}
+	
+	public Receipt updateReceipt(Receipt r) {
+		Receipt updateReceipt = rRepo.findById(r.getReceiptNumer()).get();
 		
-	}*/
+		updateReceipt.setAmountOfItems(r.getAmountOfItems());
+		updateReceipt.setDateTime(r.getDateTime());
+		updateReceipt.setItems(r.getItems());
+		updateReceipt.setTotal(r.getTotal());
+		updateReceipt.setUser(r.getUser());
+		
+		return rRepo.save(updateReceipt);
+	}
+	
+	public String deleteReceipt(Receipt r) {
+		rRepo.delete(r);
+		return "Receipt has been deleted";
+	}
 
 }
