@@ -48,5 +48,7 @@ public class ReceiptService {
 		List<Receipt> rList = rRepo.getReceiptsByUser(u);
 		return rList;
 	}
+	
+	
 
 }

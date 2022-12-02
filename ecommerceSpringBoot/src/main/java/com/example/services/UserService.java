@@ -18,18 +18,17 @@ public class UserService {
 	
 	private UserRepository userRepo;
 	
-	public User registerUser(String firstName, String lastName, String email, String password) {
-		User u = new User(firstName, lastName, email, password);
-		
+	
+	public User registerUser(User u) {
 		try {
-			User newU = userRepo.save(u);
-			return newU;
-		}catch(Exception e) {
+			return userRepo.save(u);
+		} catch(Exception e) {
 			throw new UAEException();
 		}
+		
 	}
 	
-	public User logiUser(String email, String password) {
+	public User logInUser(String email, String password) {
 		User u = userRepo.getByEmail(email).orElseThrow(ICException::new);
 		if(!u.getPassword().equals(password)) {
 			throw new ICException();
@@ -37,5 +36,11 @@ public class UserService {
 		return u;
 	}
 	
-	
+	public User updateUser(User u) {
+		try {
+			return userRepo.save(u);
+		}catch(Exception e) {
+			throw new UAEException();
+		}
+	}
 }
