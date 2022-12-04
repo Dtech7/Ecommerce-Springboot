@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.exceptions.NSRException;
 import com.example.models.Item;
 import com.example.models.Receipt;
 import com.example.models.User;
@@ -47,6 +48,15 @@ public class ReceiptService {
 		User u = uRepo.getByEmail(email).get();
 		List<Receipt> rList = rRepo.getReceiptsByUser(u);
 		return rList;
+	}
+	
+	public Receipt updateReceipt(Receipt r) {
+		try {
+			return rRepo.save(r);
+		}catch(Exception e) {
+			throw new NSRException();
+		}
+		
 	}
 	
 	

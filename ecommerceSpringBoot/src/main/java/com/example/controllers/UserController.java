@@ -4,15 +4,16 @@ import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.exceptions.ICException;
 import com.example.exceptions.UAEException;
 import com.example.models.User;
 import com.example.services.UserService;
@@ -45,7 +46,7 @@ public class UserController {
 		}
 	}*/
 	
-	/*Register User*/
+/*---------------------------Register User------------------------------------*/
 	@PostMapping("/register")
 	public User register(@RequestBody User u) {
 		return uServ.registerUser(u);
@@ -63,7 +64,7 @@ public class UserController {
 	}
 	
 	
-	/*LogIn User*/
+/*---------------------------LogIn User----------------------------------------*/
 	@PostMapping("/logIn")
 	public User logInUser(@RequestBody LinkedHashMap<String, String> body) {
 		String email = body.get("email");
@@ -71,14 +72,22 @@ public class UserController {
 		return uServ.logInUser(email, password);
 	}
 	
-	/*Update user*/
+/*--------------------------Update user----------------------------------------*/
 	@PutMapping("/")
 	public User updateUser(@RequestBody User u) {
 		return uServ.updateUser(u);
 	}
 	
-	/*Exception Handlers*/
-
+/*--------------------------Exception Handlers-----------------------------------*/
+	@ExceptionHandler({ICException.class})
+	public ResponseEntity<String> handleIC(){
+		return new ResponseEntity<>("Invalid Credentials", HttpStatus.NOT_ACCEPTABLE);
+	}
+	
+	@ExceptionHandler({UAEException.class})
+	public ResponseEntity<String> handleUAE(){
+		return new ResponseEntity<>("Email already exist", HttpStatus.CONFLICT);
+	}
 
 }	
 

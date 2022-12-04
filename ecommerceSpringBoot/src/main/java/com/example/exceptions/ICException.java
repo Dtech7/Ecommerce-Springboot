@@ -1,5 +1,6 @@
 package com.example.exceptions;
 
+
 public class ICException extends RuntimeException {
 
 	/**
