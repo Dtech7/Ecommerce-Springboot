@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
 
 const fadeIn = keyframes`
@@ -8,7 +8,7 @@ const fadeIn = keyframes`
     100% {opacity: 100%}
 `
 const Container = styled.div`
-    background: white;
+    background-color: ${(props) => props.theme.body};
     padding: 40px;
     animation: ${fadeIn} 1s;
 `
@@ -37,9 +37,10 @@ const Input = styled.input`
     padding: 5px;
     padding-inline: 8px;
     margin-bottom: 15px;
-    color: #222;
-    outline: 1px solid #ccc;
+    color: ${(props) => props.theme.text};
+    outline: 1px solid ${(props) => props.theme.border};
     border: none;
+    background: transparent;
 `
 const LoginButton = styled.button`
     border: none;
@@ -61,7 +62,6 @@ export const RegisterForm: React.FC = () => {
     const [error, setError] = useState<boolean>(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        
         if (e.target.name === "email") {
             setEmail(e.target.value);
         } else if (e.target.name === "password") {
@@ -72,8 +72,9 @@ export const RegisterForm: React.FC = () => {
             setLastName(e.target.value);
         }
     }
-  
+
     const navigate = useNavigate();
+
     const handleRegister = async () => {
         let register = {
             firstName,
@@ -92,31 +93,31 @@ export const RegisterForm: React.FC = () => {
         } catch (e) {
             setError(true);
         }
-        
+
         navigate("/");
     };
-    
+
     return (
         <Container>
-            <Form id="register-form">
+            <Form>
                 <Label>FIRST NAME</Label>
                 <InputWrapper>
-                    <Input name="firstName" onChange={handleChange} type="text" />
+                    <Input onChange={handleChange} type="text" />
                 </InputWrapper>
                 <Label>LAST NAME</Label>
                 <InputWrapper>
-                    <Input name="lastName" onChange={handleChange} type="text" />
+                    <Input onChange={handleChange} type="text" />
                 </InputWrapper>
                 <Label>EMAIL ADDRESS</Label>
                 <InputWrapper>
-                    <Input name="email" onChange={handleChange} type="email" />
+                    <Input onChange={handleChange} type="email" />
                 </InputWrapper>
                 <Label>PASSWORD</Label>
                 <FinalWrapper>
-                    <Input name="password" onChange={handleChange} type="password" />
+                    <Input onChange={handleChange} type="password" />
                 </FinalWrapper>
-                <LoginButton type='button' onClick={handleRegister}>REGISTER</LoginButton>
+                <LoginButton onClick={handleRegister}>REGISTER</LoginButton>
             </Form>
-        </Container>    
+        </Container>
     );
 }

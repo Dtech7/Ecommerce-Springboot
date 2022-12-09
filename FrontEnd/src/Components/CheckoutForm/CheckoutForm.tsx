@@ -1,5 +1,9 @@
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
+import { Context } from '../../Context/ProductContext'
+import { ProductContextState } from '../../Types/Product'
 import { User } from '../../Types/User'
 
 const fadeIn = keyframes`
@@ -10,7 +14,7 @@ const Container = styled.div`
     width: 500px;
     padding-block: 10px;
     box-shadow: 0 0 10px 3px rgba(0,0,0,0.2);
-    background: white;
+    background-color: ${(props) => props.theme.body};
     animation: ${fadeIn} 1s;
 `
 const Form = styled.form`
@@ -41,9 +45,10 @@ const Input = styled.input`
     padding: 5px;
     padding-inline: 8px;
     margin-bottom: 15px;
-    color: #222;
-    outline: 1px solid #ccc;
+    color: ${(props) => props.theme.text};
+    outline: 1px solid ${(props) => props.theme.border};
     border: none;
+    background: transparent;
 `
 const PlaceOrder = styled.button`
     border: none;
@@ -58,7 +63,7 @@ const PlaceOrder = styled.button`
 `
 
 const CheckoutForm: React.FC<User> = ({
-    id,
+    userId: id,
     firstName,
     lastName,
     email,
@@ -67,11 +72,13 @@ const CheckoutForm: React.FC<User> = ({
     password,
 }) => {
 
-    const [inputEmail, setInputEmail] = useState(email)
-    const [inputAddress, setInputAddress] = useState(address)
-    const [inputPhoneNumber, setInputPhoneNumber] = useState(phoneNumber)
-    const [inputFirstName, setInputFirstName] = useState(firstName)
-    const [inputLastName, setInputLastName] = useState(lastName)
+    const { products, removeAllProductsFromCart } = useContext(Context) as ProductContextState;
+
+    const [inputEmail, setInputEmail] = useState<string>(email)
+    const [inputAddress, setInputAddress] = useState<string>(address)
+    const [inputPhoneNumber, setInputPhoneNumber] = useState<string>(phoneNumber)
+    const [inputFirstName, setInputFirstName] = useState<string>(firstName)
+    const [inputLastName, setInputLastName] = useState<string>(lastName)
 
     const handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
         setInputEmail(e.currentTarget.value);
@@ -91,6 +98,50 @@ const CheckoutForm: React.FC<User> = ({
 
     const handleLastNameChange = (e: React.FormEvent<HTMLInputElement>) => {
         setInputLastName(e.currentTarget.value);
+    }
+
+    const navigate = useNavigate();
+    const navigateToSuccess = () => {
+        createReceipt();
+        navigate('/success');
+        removeAllProductsFromCart();
+    }
+
+    type CreateReceiptResponse = {
+        userId: number;
+        items: number[];
+    }
+
+    async function createReceipt() {
+
+        let amountOfItems = 0;
+        for (let i = 0; i < products.length; i++) {
+            amountOfItems += products[i].amount
+        }
+
+        try {
+
+            const { data } = await axios.post<CreateReceiptResponse>(
+                "http://localhost:8000/receipts/create",
+                {
+                    userId: id,
+                    items: products,
+                    amountOfItems: amountOfItems
+                }
+            )
+
+            console.log(data);
+            return data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.log('error message: ', error.message);
+
+                return error.message;
+            } else {
+                console.log('unexpected error: ', error);
+                return 'An unexpected error occurred';
+            }
+        }
     }
 
     return (
@@ -130,7 +181,7 @@ const CheckoutForm: React.FC<User> = ({
                         <Input maxLength={3} required placeholder='***' />
                     </InputWrapper>
                 </CCWrapper>
-                <PlaceOrder>SUBMIT ORDER</PlaceOrder>
+                <PlaceOrder onClick={navigateToSuccess}>SUBMIT ORDER</PlaceOrder>
             </Form>
         </Container >
     )

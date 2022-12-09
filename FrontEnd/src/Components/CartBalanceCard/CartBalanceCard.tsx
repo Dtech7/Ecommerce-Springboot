@@ -16,11 +16,12 @@ const Container = styled.div`
     box-shadow: 0 0 10px 3px rgba(0,0,0,0.2);
     background: white;
     margin-bottom: 50px;
+    background-color: ${(props) => props.theme.body};
     animation: ${fadeIn} 1s;
 `
 const CartBalance = styled.h3`
     padding: 3px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid ${(props) => props.theme.border};
 `
 const Wrapper = styled.div`
     display: flex;
@@ -33,7 +34,7 @@ const BottomWrapper = styled.div`
     display: flex;
     justify-content: right;
     padding: 5px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid ${(props) => props.theme.border};
 `
 const FinalWrapper = styled.div`
     display: flex;
@@ -64,11 +65,13 @@ const CartBalanceCard: React.FC = () => {
 
     let shipping: number;
 
-    if (subtotal > 952.38) {
+    let taxed: number = subtotal * 1.59
+
+    if (taxed > 952.38) {
         shipping = 0;
     } else shipping = 2;
 
-    let total = ((cartTotal(products) * 1.59) + shipping).toFixed(2);
+    let total = (taxed + shipping).toFixed(2);
 
     console.log(subtotal, shipping, total)
     return (
@@ -77,7 +80,7 @@ const CartBalanceCard: React.FC = () => {
             {
                 products.map((product, index) => {
                     return (
-                        <CartCard key={index} productId={product.productId} img={product.img} title={product.title} desc={product.desc} price={product.price} amount={product.amount} itemOrder={index + 1} />
+                        <CartCard key={index} itemId={product.itemId} imageUrl={product.imageUrl} name={product.name} description={product.description} price={product.price} amount={product.amount} itemOrder={index + 1} />
                     );
                 })
             }

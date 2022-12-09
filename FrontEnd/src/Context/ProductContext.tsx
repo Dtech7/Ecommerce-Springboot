@@ -13,19 +13,21 @@ const ProductProvider: React.FC<ProviderProps> = ({ children }) => {
 
     const [cartNumber, setCartNumber] = useState<number>(0)
 
+    const [search, setSearch] = useState<string>('');
+
     const addProductToCart = (product: Product) => {
         const addedProduct: Product = {
-            productId: product.productId,
-            img: product.img,
-            title: product.title,
-            desc: product.desc,
+            itemId: product.itemId,
+            imageUrl: product.imageUrl,
+            name: product.name,
+            description: product.description,
             price: product.price,
             amount: product.amount,
         };
 
         let addProduct: boolean = true;
         for (let i: number = 0; i < products.length; i++) {
-            if (products[i].productId === addedProduct.productId) {
+            if (products[i].itemId === addedProduct.itemId) {
                 products[i].amount++;
                 addProduct = false;
             }
@@ -38,8 +40,12 @@ const ProductProvider: React.FC<ProviderProps> = ({ children }) => {
     };
 
     const removeProductFromCart = (productId: number) => {
-        setProducts(products.filter((product: Product) => product.productId !== productId));
+        setProducts(products.filter((product: Product) => product.itemId !== productId));
     };
+
+    const removeAllProductsFromCart = () => {
+        setProducts([]);
+    }
 
     const itemsInCart = (n: number): number => {
         setCartNumber(cartNumber + n);
@@ -49,7 +55,7 @@ const ProductProvider: React.FC<ProviderProps> = ({ children }) => {
 
     const updateAmount = (productId: number, n: number) => {
         for (let i: number = 0; i < products.length; i++) {
-            if (productId === products[i].productId)
+            if (productId === products[i].itemId)
                 products[i].amount = products[i].amount + n;
         }
     }
@@ -63,9 +69,15 @@ const ProductProvider: React.FC<ProviderProps> = ({ children }) => {
         return total;
     }
 
+    const itemSearch = (e: string) => {
+        if (e) {
+            setSearch(e);
+        }
+    }
+
 
     return (
-        <Context.Provider value={{ products, addProductToCart, removeProductFromCart, itemsInCart, cartTotal, cartNumber, updateAmount }}>
+        <Context.Provider value={{ products, addProductToCart, removeProductFromCart, itemsInCart, cartTotal, cartNumber, updateAmount, itemSearch, search, removeAllProductsFromCart }}>
             {children}
         </Context.Provider>
     )

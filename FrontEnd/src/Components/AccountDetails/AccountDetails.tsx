@@ -9,11 +9,12 @@ const textAppear = keyframes`
     100% {opacity: 100%},
 `
 const Container = styled.div`
-    background: white;
+    background-color: ${(props) => props.theme.body};
+    color: ${(props) => props.theme.text};
     box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
     width: 600px;
     margin-top: 10px;
-    height: fit-content;
+    height: fit-content
     animation: ${textAppear} 1s;
 `
 const Title = styled.div`
@@ -42,7 +43,6 @@ const Label = styled.label`
     font-size: 18px;
     margin-block: 10px;
     text-align: left;
-    color: #444;
 `
 const Input = styled.input`
     width: 95%;
@@ -50,8 +50,9 @@ const Input = styled.input`
     padding: 5px;
     padding-inline: 8px;
     margin-bottom: 15px;
-    color: #222;
-    outline: 1px solid #ccc;
+    color: ${(props) => props.theme.text};
+    outline: 1px solid ${(props) => props.theme.border};
+    background: transparent;
     border: none;
 `
 const SaveChanges = styled.button`
@@ -67,7 +68,7 @@ const SaveChanges = styled.button`
 `
 
 const AccountDetails: React.FC<User> = ({
-    userId,
+    userId: id,
     firstName,
     lastName,
     email,
@@ -76,13 +77,11 @@ const AccountDetails: React.FC<User> = ({
     password,
 }) => {
 
-
-    const [inputEmail, setInputEmail] = useState(email)
-    const [inputAddress, setInputAddress] = useState(address)
-    const [inputPhoneNumber, setInputPhoneNumber] = useState(phoneNumber)
-    const [inputFirstName, setInputFirstName] = useState(firstName)
-    const [inputLastName, setInputLastName] = useState(lastName)
-    const [inputpassword, setInputPassword] = useState(password);
+    const [inputEmail, setInputEmail] = useState<string>(email)
+    const [inputAddress, setInputAddress] = useState<string>(address)
+    const [inputPhoneNumber, setInputPhoneNumber] = useState<string>(phoneNumber)
+    const [inputFirstName, setInputFirstName] = useState<string>(firstName)
+    const [inputLastName, setInputLastName] = useState<string>(lastName)
     const [infoSaved, setInfoSaved] = useState<boolean>(false);
 
     const handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -105,14 +104,10 @@ const AccountDetails: React.FC<User> = ({
         setInputLastName(e.currentTarget.value);
     }
 
-    const handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
-        setInputPassword(e.currentTarget.value);
-    }
-
     const handleSave = async () => {
-        try{
+        try {
             let saved = {
-                userId,
+                id,
                 firstName,
                 lastName,
                 email,
@@ -121,16 +116,16 @@ const AccountDetails: React.FC<User> = ({
                 password
             }
             const headers = {
-                'Access-Control-Allow-Origin' : '*'
+                'Access-Control-Allow-Origin': '*'
             };
 
-            let res = await axios.put('http://localhost:8000/users/', saved, {headers});
+            let res = await axios.put('http://localhost:8000/users/', saved, { headers });
             let sUser = await res.data;
-            if(sUser.length !== 0){
+            if (sUser.length !== 0) {
                 setInfoSaved(true);
             }
 
-        }catch(e){}
+        } catch (e) { }
     }
 
     return (
@@ -163,11 +158,6 @@ const AccountDetails: React.FC<User> = ({
                 <InputWrapper>
                     <Input onChange={handleLastNameChange} value={inputLastName}></Input>
                 </InputWrapper>
-                <Label>PASSWORD*</Label>
-                <InputWrapper>
-                    <Input onChange={handlePasswordChange} value={inputpassword}></Input>
-                </InputWrapper>
-                
                 <SaveChanges>SAVE CHANGES</SaveChanges>
             </Form>
         </Container>

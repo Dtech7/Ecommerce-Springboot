@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Search, ShoppingCartOutlined } from '@mui/icons-material'
 import StorefrontIcon from '@mui/icons-material/Storefront';
@@ -10,12 +10,13 @@ import { Product, ProductContextState } from '../../Types/Product'
 
 const Container = styled.div`
     height: 100px;
-    background-color: white;
+    background-color: ${(props) => props.theme.body};
+    color: ${(props) => props.theme.text};
     position: sticky;
     z-index: 2;
     width: 100vw;
     top: 0;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid ${(props) => props.theme.border};
 `
 const Wrapper = styled.div`
     height: 100%;
@@ -29,8 +30,8 @@ const Left = styled.div`
     display: flex;
     align-items: center;
 `
-const SearchContainer = styled.div`
-    border: 1px solid lightgray;
+const SearchContainer = styled.form`
+    border: 1px solid ${(props) => props.theme.border};
     display: flex;
     align-items: center;
     margin-left: 25px;
@@ -39,9 +40,16 @@ const SearchContainer = styled.div`
 `
 const Input = styled.input`
     border: none;
+    background: transparent;
+    color: ${(props) => props.theme.text};
     &:focus {
         outline: none;
+        background: transparent;
     }
+`
+const Button = styled.button`
+    border: none;
+    background: transparent;
 `
 const Center = styled.div`
     flex: 1;
@@ -54,6 +62,7 @@ const Logo = styled.p`
     cursor: pointer;
     letter-spacing: 6px;
     font-size: 2.2em;
+    color: ${(props) => props.theme.text};
 `
 const LogoMirror = styled.p`
     position: absolute;
@@ -61,7 +70,7 @@ const LogoMirror = styled.p`
     letter-spacing: 6px;
     transform: scale(1, -1) translateY(-67%);
     font-size: 2.2em;
-    background: -webkit-linear-gradient(#fff, #888);
+    ${(props) => props.theme.gradient};
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 `
@@ -87,12 +96,7 @@ const Navbar: React.FC = () => {
     }
 
     const navigateToLogin = () => {
-        if(localStorage.getItem("curUserL") === "true")
-        {
-            navigate('/profile');
-        }else{
-            navigate('/login');
-        }
+        navigate('/login');
         window.scrollTo(0, 0);
     }
 
@@ -106,7 +110,7 @@ const Navbar: React.FC = () => {
         window.scrollTo(0, 0);
     }
 
-    const { products } = useContext(Context) as ProductContextState;
+    const { products, itemSearch } = useContext(Context) as ProductContextState;
 
     const updateCartAmount = (): number => {
         let itemsInCart = 0;
@@ -116,14 +120,33 @@ const Navbar: React.FC = () => {
         return itemsInCart;
     }
 
+    let searchedProduct: string;
+
+    const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+        searchedProduct = e.currentTarget.value;
+    }
+
+    const ref = useRef<HTMLInputElement>(null);
+
+    const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        itemSearch(searchedProduct);
+        if (ref.current !== null) {
+            ref.current.value = '';
+        }
+        navigateToShop();
+    }
+
 
     return (
         <Container>
             <Wrapper>
                 <Left>
-                    <SearchContainer>
-                        <Input placeholder='Search' />
-                        <Search style={{ color: "gray", fontSize: 16, cursor: 'pointer' }} />
+                    <SearchContainer >
+                        <Input ref={ref} placeholder='Search' name='searchbar' onChange={handleChange} />
+                        <Button onClick={handleSubmit}>
+                            <Search type='submit' style={{ color: "gray", fontSize: 16, cursor: 'pointer' }} />
+                        </Button>
                     </SearchContainer>
                 </Left>
                 <Center onClick={navigateToHome}>
