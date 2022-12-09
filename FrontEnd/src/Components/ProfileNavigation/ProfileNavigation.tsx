@@ -5,6 +5,7 @@ import { Context } from "../../Context/UserContext";
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const textAppear = keyframes`
     0% {opacity: 0%},
@@ -79,9 +80,14 @@ const ProfileNavigation: React.FC<User> = ({
 }) => {
 
     const { updateUser, removeUser, currentTab, updateAccountTab } = useContext(Context) as UserContextState;
-
+    const navigate = useNavigate();
     const handleTabClick = (e: React.MouseEvent) => {
         updateAccountTab();
+    }
+
+    const handleLogout = () =>{
+        localStorage.clear();
+        navigate('/');
     }
   
 
@@ -111,7 +117,7 @@ const ProfileNavigation: React.FC<User> = ({
                     Past Orders
                 </TabText>
             </Tabs>
-            <Tabs>
+            <Tabs onClick={handleLogout}>
                 <LogoutOutlinedIcon style={{ fontSize: '2em' }} />
                 <TabText>
                     Sign Out

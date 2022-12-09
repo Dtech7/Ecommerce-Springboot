@@ -67,7 +67,7 @@ const SaveChanges = styled.button`
 `
 
 const AccountDetails: React.FC<User> = ({
-    id,
+    userId,
     firstName,
     lastName,
     email,
@@ -112,7 +112,7 @@ const AccountDetails: React.FC<User> = ({
     const handleSave = async () => {
         try{
             let saved = {
-                id,
+                userId,
                 firstName,
                 lastName,
                 email,

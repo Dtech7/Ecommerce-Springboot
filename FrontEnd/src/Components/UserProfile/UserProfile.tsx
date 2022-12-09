@@ -28,7 +28,7 @@ const ReceiptWrapper = styled.div`
 `
 
 export const UserProfile: React.FC<User> = ({
-    id,
+    userId: id,
     firstName,
     lastName,
     email,
@@ -68,13 +68,13 @@ export const UserProfile: React.FC<User> = ({
     return (
         <Container>
             <Wrapper>
-                <ProfileNavigation id={id} firstName={firstName} lastName={lastName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
+                <ProfileNavigation userId={id} firstName={firstName} lastName={lastName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
                 {
                     (currentTab === '1') ?
-                        <AccountDetails id={id} firstName={firstName} lastName={firstName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
+                        <AccountDetails userId={id} firstName={firstName} lastName={firstName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
                         :
                         <ReceiptWrapper>
-                            <PastOrders id={id} firstName={firstName} lastName={firstName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
+                            <PastOrders userId={id} firstName={firstName} lastName={firstName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
                         </ReceiptWrapper>
                 }
             </Wrapper>

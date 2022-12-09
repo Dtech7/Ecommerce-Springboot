@@ -60,9 +60,9 @@ export const LoginForm: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
     const [logged, setLogged] = useState<boolean>(false);
-    const [lUser, setLUser] = useState<User>();
+    
 
-
+    localStorage.clear();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (e.target.name === "email") {
             setEmail(e.target.value);
@@ -88,11 +88,15 @@ export const LoginForm: React.FC = () => {
             setError(false);
             let user = await res.data;
             console.log(user);
-            if (user.length !== 0) {
-                localStorage.setItem('curUser', user.id.toString());
-                setLogged(true);
-                sessionStorage.setItem('curUser', logged.toString());
-                navigate('/');
+            
+            if (user) {
+                
+                localStorage.setItem('curUserI',user.userId);
+               // setLogged(true);
+                console.log("check")
+                localStorage.setItem('curUserL', "true");
+                console.log("second")
+                navigate("/");
             } else {
                 setError(true);
             }
