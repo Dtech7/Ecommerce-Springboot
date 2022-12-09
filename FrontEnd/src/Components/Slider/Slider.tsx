@@ -9,14 +9,16 @@ const slideInAnimation = keyframes`
     0% {transform: translateY(-100%); opacity: 0%},
     100% {transform: translateY(0px) opacity: 100%}
 `
+const slideLeftAnimation = keyframes`
+    0% {transform: translateX(100%); opacity: 0%},
+    100% {transform: translateX(0px); opacity: 100%}
+`
 const Container = styled.div`
     width: 100%;
-    height: auto;
     display: flex;
     background-color: #eeeeee;
     position: relative;
     overflow: hidden;
-    animation: ${slideInAnimation} 1s;
 `
 const Arrow = styled.div<{ direction: string }>`
     width: 50px;
@@ -44,7 +46,6 @@ const Wrapper = styled.div<{ slideIndex: number }>`
 `
 const Slide = styled.div < { bg: string }> `
     display: flex;
-    align-items: center;
     width: 100vw;
     height: 100vh;
     background-color: #${props => props.bg};
@@ -52,14 +53,20 @@ const Slide = styled.div < { bg: string }> `
 const ImgContainer = styled.div`
     flex: 1;
     height: 100%;
+    animation: ${slideInAnimation} 1s;
 `
 const Image = styled.img`
     height: 100%;
-    box-shadow: 10px 0 20px 10px rgba(0,0,0,.25);
+    box-shadow: 10px 0 40px 10px rgba(0,0,0,.25);
 `
 const InfoContainer = styled.div`
     flex: 1;
-    padding: 50px
+    padding: 100px;
+    margin-top: -200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    animation: ${slideLeftAnimation} 1.8s;
 `
 
 const Title = styled.h1`
@@ -73,13 +80,13 @@ const Desc = styled.p`
 `
 const Button = styled.button`
     padding: 10px;
+    width: 200px;
     font-size: 20px;
-    background-color: rgba(255,255,255,0.4);
-    border: 1px solid #d5d5d5;
-    box-shadow: 0 0 20px 5px rgba(255,255,255,0.2);
+    border: none;
+    background: white;
+    /* box-shadow: 0 0 10px 2px rgba(0,0,0,0.2); */
     &:hover {
-        box-shadow:  0 0 10px 5px rgba(255,255,255,0.5);
-        background-color: rgba(255,255,255,0.8);
+        box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
         cursor: pointer;
     }
 `
@@ -100,7 +107,10 @@ const Slider: React.FC = () => {
     const navigate = useNavigate();
     const navigateToShop = () => {
         navigate('/shop');
+        window.scrollTo(0, 0);
     }
+
+    window.scrollTo(0, 0);
 
     return (
         <Container>

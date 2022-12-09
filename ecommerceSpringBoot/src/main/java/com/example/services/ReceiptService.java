@@ -1,7 +1,6 @@
 package com.example.services;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +26,14 @@ public class ReceiptService {
 	//used is email is passed(main one to use)
 	public Receipt createReceipt(String email, List<Item> items, Double total) {
 		User u = uRepo.getByEmail(email).get();
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		String now = LocalDateTime.now().format(format);
-		
-		Receipt rec = new Receipt(u, items, total, now);
+		Receipt rec = new Receipt(u, items, total);
 		return rRepo.save(rec);
 	}
 	
 	//used if userId is passed(Just an extra precaution)
 	public Receipt createReceipt(int id, List<Item> items, Double total) {
 		User u = uRepo.findById(id).get();
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		String now = LocalDateTime.now().format(format);
-		
-		Receipt rec = new Receipt(u, items, total, now);
+		Receipt rec = new Receipt(u, items, total);
 		return rRepo.save(rec);
 	}
 	

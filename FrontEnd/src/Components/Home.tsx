@@ -7,6 +7,8 @@ import { user } from '../sampleUser'
 import Announcement from './Announcement/Announcement'
 import Cart from './Cart/Cart'
 import Footer from './Footer/Footer'
+import Login from './LoginRegister/Login'
+import NewTabs from './LoginRegister/Tabs/NewTabs'
 import Navbar from './Navbar/Navbar'
 import ProductLayout from './ProductLayout/ProductLayout'
 import Slider from './Slider/Slider'
@@ -16,9 +18,12 @@ const Container = styled.div`
     background-color: #eeeeee;
     display: flex;
     flex-direction: column;
+    height: 100vh;
 `
 
 const Home: React.FC = () => {
+    const id:number = Number(window.localStorage.getItem('curUser'));
+
     return (
         <Container>
             <UserProvider>
@@ -30,7 +35,9 @@ const Home: React.FC = () => {
                         <Route path='/shop' element={<ProductLayout />} />
                         <Route path='/profile' element={<UserProfile id={user.id} firstName={user.firstName} lastName={user.lastName} email={user.email} phoneNumber={user.phoneNumber} address={user.address} password={user.password} />} />
                         <Route path='/cart' element={<Cart />} />
+                        <Route path='/login' element={<Login />} />
                     </Routes>
+                    {/* <NewTabs /> */}
                     <Footer />
                 </ProductProvider>
             </UserProvider>

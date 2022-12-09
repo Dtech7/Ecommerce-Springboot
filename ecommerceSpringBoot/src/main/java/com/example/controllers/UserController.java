@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,7 +54,7 @@ public class UserController {
 		return uServ.registerUser(u);
 	}
 	
-	@PostMapping("/register")
+	/*@PostMapping("/register")
 	public User register(@RequestBody LinkedHashMap<String, String> body) {
 		String firstName = body.get("firstName");
 		String lastName = body.get("lastName");
@@ -61,10 +63,10 @@ public class UserController {
 		User nUser  = new User(firstName, lastName, email, password);
 
 		return uServ.registerUser(nUser);
-	}
+	}*/
 	
 	
-/*---------------------------LogIn User----------------------------------------*/
+/*---------------------------LogIn User & Get user----------------------------------------*/
 	@PostMapping("/logIn")
 	public User logInUser(@RequestBody LinkedHashMap<String, String> body) {
 		String email = body.get("email");
@@ -72,6 +74,10 @@ public class UserController {
 		return uServ.logInUser(email, password);
 	}
 	
+	@GetMapping("/user/{id}")
+	public User readUser(@PathVariable("id")int id) {
+		return uServ.readUser(id);
+	}
 /*--------------------------Update user----------------------------------------*/
 	@PutMapping("/")
 	public User updateUser(@RequestBody User u) {

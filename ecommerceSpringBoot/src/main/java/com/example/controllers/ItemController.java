@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,6 +57,12 @@ public class ItemController {
 	public Item getItem(@PathVariable("id")int id) {
 		return iServ.getItemById(id);
 	}
+	
+/*--------------------------------Delete----------------------------------*/
+	@DeleteMapping("/{id}") 
+	public String delete(@PathVariable ("id")Integer i) {
+		return iServ.deleteItem(i);
+}
 	
 /*-------------------------Exception Handlers------------------------------*/
 	@ExceptionHandler({IAEException.class})

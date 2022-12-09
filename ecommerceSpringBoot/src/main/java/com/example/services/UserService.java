@@ -36,11 +36,32 @@ public class UserService {
 		return u;
 	}
 	
+	public User readUser(Integer id) {
+		return userRepo.findById(id).get();
+	}
+	
+	
 	public User updateUser(User u) {
-		try {
-			return userRepo.save(u);
-		}catch(Exception e) {
-			throw new UAEException();
+		User curUser = userRepo.findById(u.getUserId()).get();
+		if(u.getFirstName() == null){
+			u.setFirstName(curUser.getFirstName());
 		}
+		if(u.getLastName() == null){
+			u.setLastName(curUser.getLastName());
+		}
+		if(u.getEmail() == null){
+			u.setEmail(curUser.getEmail());
+		}
+		if(u.getPassword() == null){
+			u.setPassword(curUser.getPassword());
+		}
+		if(u.getAddress() == null){
+			u.setAddress(curUser.getAddress());
+		}
+		if(u.getPhoneNumber() == null){
+			u.setPhoneNumber(curUser.getPhoneNumber());
+		}
+		
+		return userRepo.save(u);
 	}
 }

@@ -4,51 +4,27 @@ import styled from "styled-components";
 import { Context } from "../../Context/UserContext";
 import { receipts } from "../../testReceipt";
 import { UserContextState, User } from "../../Types/User";
+import AccountDetails from "../AccountDetails/AccountDetails";
+import PastOrders from "../PastOrders/PastOrders";
+import ProfileNavigation from "../ProfileNavigation/ProfileNavigation";
 import ReceiptCard from "../ReceiptCard/ReceiptCard";
+import axios from 'axios';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
 `
 const Wrapper = styled.div`
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin-block: 50px;
 `
-const TitleContainer = styled.div`
-    background-color: #333;
-    width: 50vw;
-    display: flex;
-    padding-inline: 5px;
-    border-radius: 10px 10px 0 0;
-`
-const Title = styled.h1`
-    color: #ccc;
-`
-const NameContainer = styled.div`
-    display: flex;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 5px;
-    padding: 3px 0 8px;
-`
-const NameTitleContainer = styled.div`
-    width: 25vw;
-    padding: 0 0 0 10px;
-`
-const NameTitle = styled.h2`
-`
-const UserNameContainer = styled.div`
-    display: flex;
-    justify-content: right;
-    width: 25vw;
-    padding: 0 10px 0 0;
-`
-const UserName = styled.h3`
-`
-const ReceiptContainer = styled.div`
-    border-radius: 5px;
+const ReceiptWrapper = styled.div`
+    margin-top: 10px;
+    background-color: white;
+    height: fit-content;
+    box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
 `
 
 export const UserProfile: React.FC<User> = ({
@@ -59,8 +35,25 @@ export const UserProfile: React.FC<User> = ({
     phoneNumber,
     address,
     password,
+
 }) => {
-    const { updateUser, removeUser } = useContext(Context) as UserContextState;
+
+    const [user, setUser] = useState<User>();
+    const [error, setError] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    
+    const { updateUser, removeUser, currentTab } = useContext(Context) as UserContextState;
+
+    const getTheUser = async () =>{
+        try{
+            const res = await axios.get('http://localhost:8000/users/user/'+id);
+            setUser(await res.data);
+            setError(false);
+        }catch(e){
+            setError(true);
+        }
+    };
 
     const editProfile = () => {
         updateUser(id);
@@ -69,35 +62,21 @@ export const UserProfile: React.FC<User> = ({
     const deleteProfile = () => {
         removeUser(id);
     };
+    getTheUser();
+
 
     return (
         <Container>
             <Wrapper>
-                <TitleContainer>
-                    <Title>Profile</Title>
-                </TitleContainer>
-                <NameContainer>
-                    <NameTitleContainer>
-                        <NameTitle>Name:</NameTitle>
-                    </NameTitleContainer>
-                    <UserNameContainer>
-                        <UserName>{firstName} {lastName}</UserName>
-                    </UserNameContainer>
-                </NameContainer>
-                <h3>{email}</h3>
-                <h3>{phoneNumber}</h3>
-                <h3>{address}</h3>
-                <ReceiptContainer>
-                    {
-                        receipts.map((receipt) => {
-                            if (id === receipt.userId) {
-                                return (
-                                    <ReceiptCard key={receipt.receiptId} items={receipt.items} userId={receipt.userId} receiptId={receipt.receiptId} date={receipt.date} />
-                                )
-                            }
-                        })
-                    }
-                </ReceiptContainer>
+                <ProfileNavigation id={id} firstName={firstName} lastName={lastName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
+                {
+                    (currentTab === '1') ?
+                        <AccountDetails id={id} firstName={firstName} lastName={firstName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
+                        :
+                        <ReceiptWrapper>
+                            <PastOrders id={id} firstName={firstName} lastName={firstName} email={email} phoneNumber={phoneNumber} address={address} password={password} />
+                        </ReceiptWrapper>
+                }
             </Wrapper>
         </Container>
     );

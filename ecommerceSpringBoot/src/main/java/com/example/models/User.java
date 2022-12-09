@@ -3,6 +3,7 @@ package com.example.models;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -37,6 +38,7 @@ public class User {
 	@Column(unique = true)
 	private String email;
 	
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)

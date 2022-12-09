@@ -1,43 +1,52 @@
 import React, { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { User } from '../../Types/User'
+import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
+import axios from 'axios';
 
-const fadeIn = keyframes`
+const textAppear = keyframes`
     0% {opacity: 0%},
-    100% {opacity: 100%}
+    100% {opacity: 100%},
 `
 const Container = styled.div`
-    width: 500px;
-    padding-block: 10px;
-    box-shadow: 0 0 10px 3px rgba(0,0,0,0.2);
     background: white;
-    animation: ${fadeIn} 1s;
+    box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
+    width: 600px;
+    margin-top: 10px;
+    height: fit-content;
+    animation: ${textAppear} 1s;
+`
+const Title = styled.div`
+    padding: 30px 25px 10px;
+    font-weight: bold;
+    font-size: 2em;
+`
+const Information = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 5px 25px 10px;
 `
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    padding-inline: 20px;
-    padding-block: 10px;
+    padding-inline: 25px;
+    padding-bottom: 10px;
 `
 const InputWrapper = styled.div`
     width: 100%;
     margin: 5px;
     text-align: center;
 `
-const CCWrapper = styled.div`
-    width: 100%;
-    margin-inline: 5px;
-    text-align: center;
-    display: flex;
-    justify-content: left;
-`
-const Label = styled.div`
+const Label = styled.label`
     font-weight: bold;
-    margin: 10px;
-    width: fit-content;
+    font-size: 18px;
+    margin-block: 10px;
+    text-align: left;
+    color: #444;
 `
 const Input = styled.input`
     width: 95%;
+    font-size: 18px;
     padding: 5px;
     padding-inline: 8px;
     margin-bottom: 15px;
@@ -45,7 +54,7 @@ const Input = styled.input`
     outline: 1px solid #ccc;
     border: none;
 `
-const PlaceOrder = styled.button`
+const SaveChanges = styled.button`
     border: none;
     background: #047d40;
     padding: 15px;
@@ -57,7 +66,7 @@ const PlaceOrder = styled.button`
     }
 `
 
-const CheckoutForm: React.FC<User> = ({
+const AccountDetails: React.FC<User> = ({
     id,
     firstName,
     lastName,
@@ -67,11 +76,14 @@ const CheckoutForm: React.FC<User> = ({
     password,
 }) => {
 
+
     const [inputEmail, setInputEmail] = useState(email)
     const [inputAddress, setInputAddress] = useState(address)
     const [inputPhoneNumber, setInputPhoneNumber] = useState(phoneNumber)
     const [inputFirstName, setInputFirstName] = useState(firstName)
     const [inputLastName, setInputLastName] = useState(lastName)
+    const [inputpassword, setInputPassword] = useState(password);
+    const [infoSaved, setInfoSaved] = useState<boolean>(false);
 
     const handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
         setInputEmail(e.currentTarget.value);
@@ -93,47 +105,73 @@ const CheckoutForm: React.FC<User> = ({
         setInputLastName(e.currentTarget.value);
     }
 
+    const handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
+        setInputPassword(e.currentTarget.value);
+    }
+
+    const handleSave = async () => {
+        try{
+            let saved = {
+                id,
+                firstName,
+                lastName,
+                email,
+                phoneNumber,
+                address,
+                password
+            }
+            const headers = {
+                'Access-Control-Allow-Origin' : '*'
+            };
+
+            let res = await axios.put('http://localhost:8000/users/', saved, {headers});
+            let sUser = await res.data;
+            if(sUser.length !== 0){
+                setInfoSaved(true);
+            }
+
+        }catch(e){}
+    }
+
     return (
         <Container>
+            <Title>
+                <Person2OutlinedIcon style={{ fontSize: '2rem' }} /> <br />
+                MY ACCOUNT DETAILS
+            </Title>
+            <Information>
+                Feel free to edit any fields to keep your profile up to date. Asterisks (*) are used to denote a required field.
+            </Information>
             <Form>
+                <Label>EMAIL ADDRESS*</Label>
                 <InputWrapper>
-                    <Label>EMAIL ADDRESS</Label>
-                    <Input onChange={handleEmailChange} required type="email" value={inputEmail}></Input>
+                    <Input onChange={handleEmailChange} type="email" value={inputEmail}></Input>
                 </InputWrapper>
+                <Label>DELIVERY ADDRESS*</Label>
                 <InputWrapper>
-                    <Label>DELIVERY ADDRESS</Label>
                     <Input onChange={handleAddressChange} value={inputAddress}></Input>
                 </InputWrapper>
+                <Label>PHONE NUMBER</Label>
                 <InputWrapper>
-                    <Label>PHONE NUMBER</Label>
                     <Input onChange={handlePhoneNumberChange} type="tel" value={inputPhoneNumber}></Input>
                 </InputWrapper>
+                <Label>FIRST NAME*</Label>
                 <InputWrapper>
-                    <Label>FIRST NAME</Label>
                     <Input onChange={handleFirstNameChange} value={inputFirstName}></Input>
                 </InputWrapper>
+                <Label>LAST NAME*</Label>
                 <InputWrapper>
-                    <Label>LAST NAME</Label>
                     <Input onChange={handleLastNameChange} value={inputLastName}></Input>
                 </InputWrapper>
+                <Label>PASSWORD*</Label>
                 <InputWrapper>
-                    <Label>CREDIT CARD NUMBER</Label>
-                    <Input maxLength={16} required placeholder='****************' />
+                    <Input onChange={handlePasswordChange} value={inputpassword}></Input>
                 </InputWrapper>
-                <CCWrapper>
-                    <InputWrapper>
-                        <Label>EXP DATE</Label>
-                        <Input type='text' required placeholder='mm/yyyy' />
-                    </InputWrapper>
-                    <InputWrapper>
-                        <Label>CVV</Label>
-                        <Input maxLength={3} required placeholder='***' />
-                    </InputWrapper>
-                </CCWrapper>
-                <PlaceOrder>SUBMIT ORDER</PlaceOrder>
+                
+                <SaveChanges>SAVE CHANGES</SaveChanges>
             </Form>
-        </Container >
+        </Container>
     )
 }
 
-export default CheckoutForm
+export default AccountDetails

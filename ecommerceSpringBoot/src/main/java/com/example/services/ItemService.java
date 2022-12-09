@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.exceptions.IAEException;
 import com.example.exceptions.NAIException;
@@ -13,6 +14,7 @@ import com.example.repository.ItemRepository;
 import lombok.AllArgsConstructor;
 
 @Service
+@Transactional
 @AllArgsConstructor(onConstructor=@__(@Autowired))
 public class ItemService {
 	
@@ -28,6 +30,24 @@ public class ItemService {
 	}
 	
 	public Item updateItem(Item i) {
+		Item curItem = iRepo.findById(i.getItemId()).get();
+		
+		if(i.getName() == null){
+			i.setName(curItem.getName());
+		}
+		if(i.getAmount() == null){
+			i.setAmount(curItem.getAmount());
+		}
+		if(i.getPrice() == null){
+			i.setPrice(curItem.getPrice());
+		}
+		if(i.getDescription() == null){
+			i.setDescription(curItem.getDescription());
+		}
+		if(i.getImageUrl() == null){
+			i.setImageUrl(curItem.getImageUrl());
+		}
+		
 		return iRepo.save(i);
 	}
 	
@@ -46,6 +66,13 @@ public class ItemService {
 			throw new NAIException();
 		}
 		return item;
+	}
+	
+	public String deleteItem(Integer id) {
+		Item i = iRepo.findById(id).get();
+		iRepo.delete(i);
+		
+		return "Item has been deleted";
 	}
 
 }

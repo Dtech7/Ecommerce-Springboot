@@ -16,13 +16,16 @@ const Container = styled.div`
     height: 400px;
     display: flex;
     flex-direction: column;
-    margin: 15px;
+    margin: 20px;
     padding: 10px;
     align-items: center;
-    box-shadow: 10px 0 30px 10px rgba(0,0,0,.2);
+    box-shadow: 0 0 10px 3px rgba(0,0,0,.2);
     border-radius: 5px;
     background: white;
     animation: ${slideInAnimation} 1s;
+    /* &:hover { */
+    /*     box-shadow: inset 0 0 20px 5px rgba(50,0,0,.2); */
+    /* } */
 `
 const ImageContainer = styled.div`
     position: relative; 
@@ -67,12 +70,17 @@ const Cart = styled.button`
     padding: 5px;
     border-radius: 5px;
     cursor: pointer;
+    background: transparent;
     animation: ${textAppear} 1s;
+    &:hover {
+            background: #047d40;
+            color: white;
+        }
 `
 
 const ProductCard: React.FC<Product> = ({ productId, img, title, desc, price, amount }) => {
 
-    const { addProductToCart, products, itemsInCart } = useContext(Context) as ProductContextState;
+    const { addProductToCart, itemsInCart } = useContext(Context) as ProductContextState;
 
     const addToCart = () => {
         addProductToCart({ productId, img, title, desc, price, amount });

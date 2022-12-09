@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { Context } from '../../Context/ProductContext'
 import { ProductContextState } from '../../Types/Product'
@@ -13,11 +13,13 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     padding: 5px;
-    box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);
-    background: #fff;
+    box-shadow: 0 0 10px 3px rgba(0,0,0,0.2);
+    background: white;
+    margin-bottom: 50px;
     animation: ${fadeIn} 1s;
 `
 const CartBalance = styled.h3`
+    padding: 3px;
     border-bottom: 1px solid #ccc;
 `
 const Wrapper = styled.div`
@@ -39,19 +41,12 @@ const FinalWrapper = styled.div`
     padding-top: 15px;
     padding-inline: 5px;
 `
-const Subtotal = styled.div`
+const Title = styled.div`
     flex: 1;
     padding-bottom: 5px;
-    font-size: 16px;
+    font-size: 14px;
 `
-const Shipping = styled.div`
-    flex: 1;
-    padding-bottom: 5px;
-    font-size: 16px;
-`
-const Tax = styled.div`
-    flex: 1;
-    padding-bottom: 5px;
+const DollarAmount = styled.div`
     font-size: 16px;
 `
 const Total = styled.div`
@@ -67,17 +62,18 @@ const CartBalanceCard: React.FC = () => {
 
     let subtotal = cartTotal(products);
 
-    let shipping: number = 2.00;
+    let shipping: number;
 
     if (subtotal > 952.38) {
         shipping = 0;
-    }
+    } else shipping = 2;
 
     let total = ((cartTotal(products) * 1.59) + shipping).toFixed(2);
 
+    console.log(subtotal, shipping, total)
     return (
         <Container>
-            <CartBalance>Summary</CartBalance>
+            <CartBalance>Cart Summary</CartBalance>
             {
                 products.map((product, index) => {
                     return (
@@ -87,20 +83,20 @@ const CartBalanceCard: React.FC = () => {
             }
             <Wrapper>
                 <BottomWrapper>
-                    <Subtotal>Subtotal </Subtotal>
-                    ${subtotal.toFixed(2)}
+                    <Title>Subtotal </Title>
+                    <DollarAmount>${subtotal.toFixed(2)}</DollarAmount>
                 </BottomWrapper>
                 <BottomWrapper>
-                    <Shipping>Shipping </Shipping>
-                    ${shipping.toFixed(2)}
+                    <Title>Shipping </Title>
+                    <DollarAmount>${shipping.toFixed(2)}</DollarAmount>
                 </BottomWrapper>
                 <BottomWrapper>
-                    <Tax>Tax </Tax>
-                    59%
+                    <Title>Tax </Title>
+                    <DollarAmount>59%</DollarAmount>
                 </BottomWrapper>
                 <FinalWrapper>
                     <Total>Total </Total>
-                    ${total}
+                    <DollarAmount>${total}</DollarAmount>
                 </FinalWrapper>
             </Wrapper>
         </Container>

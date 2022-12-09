@@ -50,12 +50,12 @@ public class Receipt {
 	@Column(name="created_Date/Time")
 	private LocalDateTime dateTime;
 	
-	private Integer amountOfItems;
+	//private Integer amountOfItems;
 	
-	public Receipt(User user, List<Item> items, Double total, String dateTime) {
+	public Receipt(User user, List<Item> items, Double total) {
 		this.user = user;
 		this.items = items;
 		this.total = total;
-		this.dateTime = LocalDateTime.parse(dateTime);
+		this.dateTime = LocalDateTime.now();
 	}
 }

@@ -1,19 +1,21 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { Search, ShoppingCartOutlined } from '@mui/icons-material'
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import { Badge } from '@mui/material'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom'
 import { Context } from '../../Context/ProductContext'
 import { Product, ProductContextState } from '../../Types/Product'
 
 const Container = styled.div`
-    height: 80px;
-    background-color: #eeeeee;
+    height: 100px;
+    background-color: white;
     position: sticky;
     z-index: 2;
     width: 100vw;
     top: 0;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #ddd;
 `
 const Wrapper = styled.div`
     height: 100%;
@@ -37,7 +39,6 @@ const SearchContainer = styled.div`
 `
 const Input = styled.input`
     border: none;
-    background-color: #eeeeee;
     &:focus {
         outline: none;
     }
@@ -82,23 +83,22 @@ const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const navigateToHome = () => {
         navigate('/');
-    }
-
-
-    const navigateToRegister = () => {
-        navigate('/register');
+        window.scrollTo(0, 0);
     }
 
     const navigateToLogin = () => {
         navigate('/login');
+        window.scrollTo(0, 0);
     }
 
     const navigateToCart = () => {
         navigate('/cart');
+        window.scrollTo(0, 0);
     }
 
     const navigateToShop = () => {
         navigate('/shop');
+        window.scrollTo(0, 0);
     }
 
     const { products } = useContext(Context) as ProductContextState;
@@ -126,12 +126,11 @@ const Navbar: React.FC = () => {
                     <LogoMirror>NAJ</LogoMirror>
                 </Center>
                 <Right>
-                    <MenuItem onClick={navigateToShop}>Shop</MenuItem>
-                    <MenuItem onClick={navigateToRegister}>Register</MenuItem>
-                    <MenuItem onClick={navigateToLogin}>Sign In</MenuItem>
+                    <MenuItem onClick={navigateToShop}><StorefrontIcon style={{ opacity: '0.6', fontSize: '2em' }} /></MenuItem>
+                    <MenuItem onClick={navigateToLogin}><AccountCircleIcon style={{ opacity: '0.6', fontSize: '2em' }} /></MenuItem>
                     <MenuItem>
                         <Badge badgeContent={updateCartAmount()} color="primary" onClick={navigateToCart}>
-                            <ShoppingCartOutlined />
+                            <ShoppingCartOutlined style={{ opacity: '0.6', fontSize: '2em' }} />
                         </Badge>
                     </MenuItem>
                 </Right>

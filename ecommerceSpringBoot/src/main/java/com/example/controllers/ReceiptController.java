@@ -1,6 +1,6 @@
 package com.example.controllers;
 
-import java.util.LinkedHashMap;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +33,7 @@ public class ReceiptController {
 	private ReceiptService rServ;
 	
 /*---------------------------------Create-------------------------------------------*/	
-	//Not sure if this will work because of type cast from object to list
-	@PostMapping("/create")
-	public Receipt createReceipt(@RequestBody LinkedHashMap<String, Object> body) {
-		String email = (String) body.get("email");
-		@SuppressWarnings (value="unchecked")
-		List<Item> items =  (List<Item>) body.get("items");
-		Double total = (Double) body.get("total");
-		return rServ.createReceipt(email, items, total);
-	}
-	
+
 	@PostMapping("/create")
 	public Receipt createReceipt(@RequestBody NewReceiptObject body) {
 		return rServ.createReceipt(body.email, body.items, body.total);
@@ -50,10 +41,6 @@ public class ReceiptController {
 	
 /*------------------------------Update------------------------------------------*/
 
-	/*not used by users
-	 * used by store to update user receipt in the event of returns 
-	 * or specail discounts that may have been applied after the original 
-	 * receipt was created */
 	@PutMapping("/update")
 	public Receipt updateTicket(@RequestBody Receipt r) {
 		return rServ.updateReceipt(r);
