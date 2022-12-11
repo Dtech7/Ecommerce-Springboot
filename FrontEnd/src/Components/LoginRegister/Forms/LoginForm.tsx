@@ -89,16 +89,13 @@ export const LoginForm: React.FC = () => {
             };
             let res = await axios.post('http://localhost:8000/users/logIn', login, { headers });
             setError(false);
-            let user = await res.data;
+            let nuser = await res.data;
+            setUser(nuser);
             console.log(user);
 
             if (user) {
-
-                localStorage.setItem('curUserI', user.userId);
-                // setLogged(true);
-                console.log("check")
+                localStorage.setItem('curUserI', user.userId.toString());
                 localStorage.setItem('curUserL', "true");
-                console.log("second")
                 navigate("/");
             } else {
                 setError(true);
@@ -119,7 +116,7 @@ export const LoginForm: React.FC = () => {
                 </InputWrapper>
                 <Label>PASSWORD</Label>
                 <FinalWrapper>
-                    <Input onChange={handleChange} type='password' />
+                    <Input onChange={handleChange} name='password' type='password' />
                 </FinalWrapper>
                 <LoginButton type='button' onClick={handleLogin}>LOGIN</LoginButton>
             </Form>

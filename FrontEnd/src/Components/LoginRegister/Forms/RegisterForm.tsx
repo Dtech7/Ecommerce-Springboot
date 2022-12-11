@@ -60,8 +60,11 @@ export const RegisterForm: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
-
+    //localStorage.clear();
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+       e.preventDefault();
+       
         if (e.target.name === "email") {
             setEmail(e.target.value);
         } else if (e.target.name === "password") {
@@ -85,16 +88,20 @@ export const RegisterForm: React.FC = () => {
         console.log(register);
 
         try {
+            const headers = {
+                'Access-Control-Allow-Origin': '*'
+            };
 
             const res = await axios.post('http://localhost:8000/users/register', register);
             setError(false);
             const user = await res.data;
-            window.localStorage.setItem('curUser', user.id.toString());
+            localStorage.setItem('curUser', user.userId);
+            navigate("/");
         } catch (e) {
             setError(true);
         }
 
-        navigate("/");
+        
     };
 
     return (
@@ -102,19 +109,19 @@ export const RegisterForm: React.FC = () => {
             <Form>
                 <Label>FIRST NAME</Label>
                 <InputWrapper>
-                    <Input onChange={handleChange} type="text" />
+                    <Input name="firstName" onChange={handleChange} type="text" />
                 </InputWrapper>
                 <Label>LAST NAME</Label>
                 <InputWrapper>
-                    <Input onChange={handleChange} type="text" />
+                    <Input name="lastName" onChange={handleChange} type="text" />
                 </InputWrapper>
                 <Label>EMAIL ADDRESS</Label>
                 <InputWrapper>
-                    <Input onChange={handleChange} type="email" />
+                    <Input name="email" onChange={handleChange} type="email" />
                 </InputWrapper>
                 <Label>PASSWORD</Label>
                 <FinalWrapper>
-                    <Input onChange={handleChange} type="password" />
+                    <Input name="password" onChange={handleChange} type="password" />
                 </FinalWrapper>
                 <LoginButton onClick={handleRegister}>REGISTER</LoginButton>
             </Form>
