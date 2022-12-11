@@ -75,8 +75,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{id}")
-	public User readUser(@PathVariable("id")int id) {
-		return uServ.readUser(id);
+	public User readUser(@PathVariable("id")String id) {
+		int iId = Integer.parseInt(id);
+		return uServ.readUser(iId);
 	}
 /*--------------------------Update user----------------------------------------*/
 	@PutMapping("/")

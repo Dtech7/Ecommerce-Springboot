@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
-import { user } from '../../../sampleUser';
-import { User } from '../../../Types/User';
+import { User, UserContextState } from '../../../Types/User';
+import { Context } from "../../../Context/UserContext";
 
 const fadeIn = keyframes`
     0% {opacity: 0%},
@@ -62,9 +62,10 @@ export const LoginForm: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [user, setUser] = useState<User>();
     const [error, setError] = useState<boolean>(false);
-    const [logged, setLogged] = useState<boolean>(false);
 
     //let navigate = useNavigate();
+
+    const { logged, loginUser } = useContext(Context) as UserContextState;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (e.target.name === "email") {
@@ -87,16 +88,16 @@ export const LoginForm: React.FC = () => {
             const headers = {
                 'Access-Control-Allow-Origin': '*'
             };
-            let res = await axios.post('http://localhost:8000/users/logIn', login, { headers });
+            let res = await axios.post('http://localhost:8000/users/login', login, { headers });
             setError(false);
-            let nuser = await res.data;
-            setUser(nuser);
+            let user = await res.data;
             console.log(user);
 
             if (user) {
-                localStorage.setItem('curUserI', user.userId.toString());
+                localStorage.setItem('curUserI', user.userId);
+                loginUser(user);
                 localStorage.setItem('curUserL', "true");
-                navigate("/");
+                navigate("/shop");
             } else {
                 setError(true);
             }
@@ -116,7 +117,7 @@ export const LoginForm: React.FC = () => {
                 </InputWrapper>
                 <Label>PASSWORD</Label>
                 <FinalWrapper>
-                    <Input onChange={handleChange} name='password' type='password' />
+                    <Input onChange={handleChange} type='password' />
                 </FinalWrapper>
                 <LoginButton type='button' onClick={handleLogin}>LOGIN</LoginButton>
             </Form>
